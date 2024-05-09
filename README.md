@@ -255,7 +255,11 @@ Thanks to everyone involved including the [third-party libraries](https://github
 - [w451](https://github.com/w451)
 
 ## Donate
+**@rhunk**
 - LTC: LbBnT9GxgnFhwy891EdDKqGmpn7XtduBdE
 - BCH: qpu57a05kqljjadvpgjc6t894apprvth9slvlj4vpj
 - BTC: bc1qaqnfn6mauzhmx0e6kkenh2wh4r6js0vh5vel92
 - ETH: 0x0760987491e9de53A73fd87F092Bd432a227Ee92
+
+**@authorisation**
+- XMR: 82kPkAgG2zxQYnSdoFSWzvbSEtEP63NBDh9hgLqp6LgBhPNhZ4dDGv8gVFUEuUhDoi1U14ZgE71teJXo2eBe8iERRRmhcUW
