@@ -1419,7 +1419,7 @@
             "note": "Note",
             "original_story": "Original Story"
         },
-        "select_attachments_title": "Select attachments to download",
+        "select_attachments_title": "Select attachments",
         "download_started_toast": "Download started",
         "unsupported_content_type_toast": "Unsupported content type!",
         "failed_no_longer_available_toast": "Media no longer available",

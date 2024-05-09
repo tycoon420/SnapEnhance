@@ -79,7 +79,13 @@ object MessageDecoder {
         return decode(
             ProtoReader(messageContent.content!!),
             customMediaReferences = getEncodedMediaReferences(gson.toJsonTree(messageContent.instanceNonNull()))
-        )
+        ).toMutableList().apply {
+            if (messageContent.quotedMessage != null && messageContent.quotedMessage!!.content != null) {
+                addAll(0, decode(
+                    MessageContent(messageContent.quotedMessage!!.content!!.instanceNonNull())
+                ))
+            }
+        }
     }
 
     fun decode(messageContent: JsonObject): List<DecodedAttachment> {
@@ -88,7 +94,11 @@ object MessageDecoder {
                 .map { it.asByte }
                 .toByteArray()),
             customMediaReferences = getEncodedMediaReferences(messageContent)
-        )
+        ).toMutableList().apply {
+            if (messageContent.has("mQuotedMessage") && messageContent.getAsJsonObject("mQuotedMessage").has("mContent")) {
+                addAll(0, decode(messageContent.getAsJsonObject("mQuotedMessage").getAsJsonObject("mContent")))
+            }
+        }
     }
 
     fun decode(
