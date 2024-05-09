@@ -138,6 +138,19 @@ object MessageDecoder {
             }
         }
 
+        fun ProtoReader.decodeShares() {
+            // saved story
+            followPath(24, 2) {
+                decodeSnapDocMedia(AttachmentType.EXTERNAL_MEDIA, this)
+            }
+            // memories story
+            followPath(11) {
+                eachBuffer(3) {
+                    decodeSnapDocMedia(AttachmentType.EXTERNAL_MEDIA, this)
+                }
+            }
+        }
+
         // media keys
         protoReader.eachBuffer(4, 5) {
             getByteArray(1, 3)?.also { mediaKey ->
@@ -157,8 +170,8 @@ object MessageDecoder {
             followPath(4) { decodeSticker(this) }
 
             // shares
-            followPath(5, 24, 2) {
-                decodeSnapDocMedia(AttachmentType.EXTERNAL_MEDIA, this)
+            followPath(5) {
+                decodeShares()
             }
 
             // audio notes
@@ -189,8 +202,16 @@ object MessageDecoder {
                 // attached sticker
                 followPath(13) { decodeSticker(this) }
 
+                // reply shares
+                followPath(14) { decodeShares() }
+
                 // attached audio note
                 followPath(15) { decodeSnapDocMediaPlayback(AttachmentType.NOTE, this) }
+
+                // reply snap
+                followPath(17) {
+                    decodeSnapDocMedia(AttachmentType.SNAP, this)
+                }
             }
 
             // snaps
