@@ -1415,6 +1415,7 @@
         "attachment_type": {
             "snap": "Snap",
             "sticker": "Sticker",
+            "gif": "GIF",
             "external_media": "External Media",
             "note": "Note",
             "original_story": "Original Story"
