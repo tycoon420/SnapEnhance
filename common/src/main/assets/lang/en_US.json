@@ -396,6 +396,10 @@
                                         "name": "Background Surface Color",
                                         "description": "Changes Snapchats background surface color"
                                     },
+                                    "friend_feed_conversations_line_color": {
+                                        "name": "Conversations Line Color",
+                                        "description": "Changes the line divider color that splits Conversations on the friend feed "
+                                    },
                                     "action_menu_background_color": {
                                         "name": "Action Menu Background Color",
                                         "description": "Changes Snapchats chat action menu background color"
@@ -1055,6 +1059,7 @@
             "theme_picker": {
                 "amoled_dark_mode": "AMOLED Dark Mode",
                 "custom": "Custom Colors",
+                "material_you": "Material You (Android 12+)",
                 "light_blue": "Light Blue",
                 "dark_blue": "Dark Blue",
                 "earthy_autumn": "Earthy Autumn",
