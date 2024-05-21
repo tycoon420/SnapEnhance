@@ -1034,7 +1034,7 @@
                 "properties": {
                     "record_messaging_events": {
                         "name": "Record Messaging Events",
-                        "description": "Records messaging events such as sending a opening a snap, reading a message, etc."
+                        "description": "Records messaging events such as opening a snap, reading a message, etc."
                     },
                     "allow_running_in_background": {
                         "name": "Allow Running in Background",
