@@ -98,12 +98,20 @@ class LoggedStories : Routes.Route() {
                             .fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        Text(text = "Posted on ${story.postedAt.let {
-                            DateFormat.getDateTimeInstance().format(Date(it))
-                        }}")
-                        Text(text = "Created at ${story.createdAt.let {
-                            DateFormat.getDateTimeInstance().format(Date(it))
-                        }}")
+                        remember {
+                            story.postedAt.takeIf { it >= 0L }?.let {
+                                DateFormat.getDateTimeInstance().format(Date(it))
+                            }
+                        }?.let {
+                            Text(text = "Posted at $it")
+                        }
+                        remember {
+                            story.createdAt.takeIf { it >= 0L }?.let {
+                                DateFormat.getDateTimeInstance().format(Date(it))
+                            }
+                        }?.let {
+                            Text(text = "Created at $it")
+                        }
 
                         FlowRow(
                             modifier = Modifier.fillMaxWidth(),
