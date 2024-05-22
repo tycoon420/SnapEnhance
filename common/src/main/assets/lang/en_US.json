@@ -1444,8 +1444,7 @@
             "reply": "Reply",
             "download": "Download",
             "mark_as_read": "Mark as Read"
-        },
-        "stealth_mode_notice": "Can't mark as read in stealth mode"
+        }
     },
 
     "profile_picture_downloader": {

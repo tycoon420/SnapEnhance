@@ -209,13 +209,9 @@ class Notifications : Feature("Notifications", loadParams = FeatureLoadParams.IN
                 }
                 ACTION_MARK_AS_READ -> {
                     runCatching {
-                        if (context.feature(StealthMode::class).canUseRule(conversationId)) {
-                            context.longToast(translations["stealth_mode_notice"])
-                            return@subscribe
-                        }
-
                         val conversationManager = context.feature(Messaging::class).conversationManager ?: return@subscribe
 
+                        context.feature(StealthMode::class).addDisplayedMessageException(clientMessageId)
                         conversationManager.displayedMessages(
                             conversationId,
                             clientMessageId,
