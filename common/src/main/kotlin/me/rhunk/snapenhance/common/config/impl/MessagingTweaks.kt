@@ -48,6 +48,21 @@ class MessagingTweaks : ConfigContainer() {
         }
     }
 
+    class BetterNotifications: ConfigContainer() {
+        val groupNotifications = boolean("group_notifications")
+        val chatPreview = boolean("chat_preview")
+        val mediaPreview = multiple("media_preview", "SNAP", "NOTE", "EXTERNAL_MEDIA", "STICKER") {
+            customOptionTranslationPath = "content_type"
+        }
+        val mediaCaption = boolean("media_caption")
+        val stackedMediaMessages = boolean("stacked_media_messages")
+        val friendAddSource = boolean("friend_add_source")
+        val replyButton = boolean("reply_button") { addNotices(FeatureNotice.UNSTABLE) }
+        val downloadButton = boolean("download_button")
+        val markAsReadButton = boolean("mark_as_read_button") { addNotices(FeatureNotice.UNSTABLE) }
+        val markAsReadAndSaveInChat = boolean("mark_as_read_and_save_in_chat") { addNotices(FeatureNotice.UNSTABLE) }
+    }
+
     val bypassScreenshotDetection = boolean("bypass_screenshot_detection") { requireRestart() }
     val anonymousStoryViewing = boolean("anonymous_story_viewing")
     val preventStoryRewatchIndicator = boolean("prevent_story_rewatch_indicator") { requireRestart() }
@@ -81,16 +96,7 @@ class MessagingTweaks : ConfigContainer() {
         "bitmoji_background_changes",
         "bitmoji_scene_changes",
     ) { requireRestart() }
-    val betterNotifications = multiple("better_notifications",
-        "chat_preview",
-        "media_preview",
-        "reply_button",
-        "download_button",
-        "mark_as_read_button",
-        "mark_as_read_and_save_in_chat",
-        "friend_add_source",
-        "group"
-    ) { requireRestart() }
+    val betterNotifications = container("better_notifications", BetterNotifications()) { requireRestart() }
     val notificationBlacklist = multiple("notification_blacklist", *NotificationType.getIncomingValues().map { it.key }.toTypedArray()) {
         customOptionTranslationPath = "features.options.notifications"
     }
