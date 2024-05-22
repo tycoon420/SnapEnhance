@@ -52,7 +52,7 @@ class MessageIndicators : Feature("Message Indicators", loadParams = FeatureLoad
                 if (message.contentType != ContentType.SNAP.id && message.contentType != ContentType.EXTERNAL_MEDIA.id) return@chatMessage
                 val reader = ProtoReader(message.messageContent ?: return@chatMessage)
 
-                val hasEncryption = if (reader.containsPath(4, 3)) reader.getByteArray(4, 3, 3) != null else false
+                val hasEncryption = reader.containsPath(3, 99, 3)
                 val sentFromIosDevice = if (reader.containsPath(4, 4, 3)) !reader.containsPath(4, 4, 3, 3, 17) else reader.getVarInt(4, 4, 11, 17, 7) != null
                 val sentFromWebApp = reader.getVarInt(4, 4, *(if (reader.containsPath(4, 4, 3)) intArrayOf(3, 3, 22, 1) else intArrayOf(11, 22, 1))) == 7L
                 val sentWithLocation = reader.getVarInt(4, 4, 11, 17, 5) != null
