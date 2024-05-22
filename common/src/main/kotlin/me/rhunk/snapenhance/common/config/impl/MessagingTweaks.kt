@@ -51,7 +51,7 @@ class MessagingTweaks : ConfigContainer() {
     class BetterNotifications: ConfigContainer() {
         val groupNotifications = boolean("group_notifications")
         val chatPreview = boolean("chat_preview")
-        val mediaPreview = multiple("media_preview", "SNAP", "NOTE", "EXTERNAL_MEDIA", "STICKER") {
+        val mediaPreview = multiple("media_preview", "SNAP", "EXTERNAL_MEDIA", "STICKER", "SHARE", "TINY_SNAP", "MAP_REACTION") {
             customOptionTranslationPath = "content_type"
         }
         val mediaCaption = boolean("media_caption")
