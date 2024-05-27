@@ -14,7 +14,6 @@ import me.rhunk.snapenhance.common.scripting.type.ModuleInfo
 import me.rhunk.snapenhance.common.scripting.type.Permissions
 import me.rhunk.snapenhance.common.scripting.ui.InterfaceManager
 import org.mozilla.javascript.Function
-import org.mozilla.javascript.NativeJavaObject
 import org.mozilla.javascript.ScriptableObject
 import org.mozilla.javascript.Undefined
 import org.mozilla.javascript.Wrapper
@@ -73,26 +72,21 @@ class JSModule(
             )
 
             moduleObject.putFunction("setField") { args ->
-                val obj = args?.get(0) as? NativeJavaObject ?: return@putFunction Undefined.instance
+                val obj = args?.get(0) ?: return@putFunction Undefined.instance
                 val name = args[1].toString()
-                val value = args[2].let {
-                    when (it) {
-                        is Wrapper -> it.unwrap()
-                        else -> it
-                    }
-                }
-                val field = obj.unwrap().javaClass.declaredFields.find { it.name == name } ?: return@putFunction Undefined.instance
+                val value = args[2]
+                val field = obj.javaClass.declaredFields.find { it.name == name } ?: return@putFunction Undefined.instance
                 field.isAccessible = true
-                field.set(obj.unwrap(), value.toPrimitiveValue(lazy { field.type.name }))
+                field.set(obj, value.toPrimitiveValue(lazy { field.type.name }))
                 Undefined.instance
             }
 
             moduleObject.putFunction("getField") { args ->
-                val obj = args?.get(0) as? NativeJavaObject ?: return@putFunction Undefined.instance
+                val obj = args?.get(0) ?: return@putFunction Undefined.instance
                 val name = args[1].toString()
-                val field = obj.unwrap().javaClass.declaredFields.find { it.name == name } ?: return@putFunction Undefined.instance
+                val field = obj.javaClass.declaredFields.find { it.name == name } ?: return@putFunction Undefined.instance
                 field.isAccessible = true
-                field.get(obj.unwrap())
+                field.get(obj)
             }
 
             moduleObject.putFunction("sleep") { args ->
@@ -126,7 +120,9 @@ class JSModule(
                 scriptableObject("JavaClassWrapper") {
                     putFunction("newInstance") newInstance@{ args ->
                         val constructor = clazz.declaredConstructors.find {
-                            it.parameterCount == (args?.size ?: 0)
+                            it.parameterTypes.zip(args ?: emptyArray()).all { (type, arg) ->
+                                type.isAssignableFrom(arg?.javaClass ?: return@all false)
+                            }
                         } ?: return@newInstance Undefined.instance
                         constructor.newInstance(*args ?: emptyArray())
                     }
