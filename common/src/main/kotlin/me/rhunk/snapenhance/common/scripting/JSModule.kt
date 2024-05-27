@@ -118,28 +118,25 @@ class JSModule(
                 }.getOrNull() ?: return@putFunction Undefined.instance
 
                 scriptableObject("JavaClassWrapper") {
-                    putFunction("newInstance") newInstance@{ args ->
+                    putFunction("__new__") { args ->
                         val constructor = clazz.declaredConstructors.find {
-                            it.parameterTypes.zip(args ?: emptyArray()).all { (type, arg) ->
-                                type.isAssignableFrom(arg?.javaClass ?: return@all false)
-                            }
-                        } ?: return@newInstance Undefined.instance
+                            (args ?: emptyArray()).isSameParameters(it.parameterTypes)
+                        }?.also { it.isAccessible = true } ?: throw IllegalArgumentException("Constructor not found with args ${argsToString(args)}")
                         constructor.newInstance(*args ?: emptyArray())
                     }
 
                     clazz.declaredMethods.filter { Modifier.isStatic(it.modifiers) }.forEach { method ->
                         putFunction(method.name) { args ->
-                            clazz.declaredMethods.find {
-                                it.name == method.name && it.parameterTypes.zip(args ?: emptyArray()).all { (type, arg) ->
-                                    type.isAssignableFrom(arg?.javaClass ?: return@all false)
-                                }
-                            }?.also { it.isAccessible = true }?.invoke(null, *args ?: emptyArray())
+                            val declaredMethod = clazz.declaredMethods.find {
+                                it.name == method.name && (args ?: emptyArray()).isSameParameters(it.parameterTypes)
+                            }?.also { it.isAccessible = true } ?: throw IllegalArgumentException("Method ${method.name} not found with args ${argsToString(args)}")
+                            declaredMethod.invoke(null, *args ?: emptyArray())
                         }
                     }
 
                     clazz.declaredFields.filter { Modifier.isStatic(it.modifiers) }.forEach { field ->
                         field.isAccessible = true
-                        defineProperty(field.name, { field.get(null)}, { value -> field.set(null, value) }, 0)
+                        defineProperty(field.name, { field.get(null) }, { value -> field.set(null, value) }, 0)
                     }
                 }
             }
