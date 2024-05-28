@@ -8,9 +8,11 @@ open class InternalFileWrapper(
     val defaultValue: String? = null
 ): FileHandleWrapper(lazy { fileHandleManager.getFileHandle(FileHandleScope.INTERNAL.key, fileType.key)!! }) {
     override fun readBytes(): ByteArray {
-        val bytes = super.readBytes()
-        if (bytes.isEmpty()) {
-            defaultValue?.let { writeBytes(it.toByteArray()) }
+        if (!exists()) {
+            defaultValue?.toByteArray(Charsets.UTF_8)?.let {
+                writeBytes(it)
+                return it
+            }
         }
         return super.readBytes()
     }
