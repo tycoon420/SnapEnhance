@@ -23,7 +23,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import me.rhunk.snapenhance.bridge.BridgeService
 import me.rhunk.snapenhance.common.BuildConfig
-import me.rhunk.snapenhance.common.bridge.types.BridgeFileType
 import me.rhunk.snapenhance.common.bridge.wrapper.LocaleWrapper
 import me.rhunk.snapenhance.common.bridge.wrapper.LoggerWrapper
 import me.rhunk.snapenhance.common.bridge.wrapper.MappingsWrapper
@@ -60,9 +59,10 @@ class RemoteSideContext(
         set(value) { _activity?.clear(); _activity = WeakReference(value) }
 
     val sharedPreferences: SharedPreferences get() = androidContext.getSharedPreferences("prefs", 0)
-    val config = ModConfig(androidContext)
-    val translation = LocaleWrapper()
-    val mappings = MappingsWrapper()
+    val fileHandleManager = RemoteFileHandleManager(this)
+    val config = ModConfig(androidContext, fileHandleManager)
+    val translation = LocaleWrapper(fileHandleManager)
+    val mappings = MappingsWrapper(fileHandleManager)
     val taskManager = TaskManager(this)
     val database = AppDatabase(this)
     val streaksReminder = StreaksReminder(this)
@@ -70,7 +70,7 @@ class RemoteSideContext(
     val scriptManager = RemoteScriptManager(this)
     val settingsOverlay = SettingsOverlay(this)
     val e2eeImplementation = E2EEImplementation(this)
-    val messageLogger by lazy { LoggerWrapper(androidContext.getDatabasePath(BridgeFileType.MESSAGE_LOGGER_DATABASE.fileName)) }
+    val messageLogger by lazy { LoggerWrapper(androidContext) }
     val tracker = RemoteTracker(this)
     val accountStorage = RemoteAccountStorage(this)
 
@@ -99,16 +99,15 @@ class RemoteSideContext(
             runBlocking(Dispatchers.IO) {
                 log.init()
                 log.verbose("Loading RemoteSideContext")
-                config.loadFromContext(androidContext)
+                config.load()
                 launch {
                     mappings.apply {
-                        loadFromContext(androidContext)
                         init(androidContext)
                     }
                 }
                 translation.apply {
                     userLocale = config.locale
-                    loadFromContext(androidContext)
+                    load()
                 }
                 database.init()
                 streaksReminder.init()
