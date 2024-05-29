@@ -1197,7 +1197,8 @@
                 "added_by_mention": "By Mention",
                 "added_by_group_chat": "By Group Chat",
                 "added_by_qr_code": "By QR Code",
-                "added_by_community": "By Community"
+                "added_by_community": "By Community",
+                "added_by_quick_add": "By Quick Add (high risk of being banned)"
             },
             "bypass_video_length_restriction": {
                 "single": "Single media",

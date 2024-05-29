@@ -58,6 +58,7 @@ class Experimental : ConfigContainer() {
         "added_by_group_chat",
         "added_by_qr_code",
         "added_by_community",
+        "added_by_quick_add",
     ) { addNotices(FeatureNotice.BAN_RISK) }
     val preventForcedLogout = boolean("prevent_forced_logout") { requireRestart(); addNotices(FeatureNotice.BAN_RISK, FeatureNotice.INTERNAL_BEHAVIOR); }
 }
