@@ -95,8 +95,10 @@ class RemoteFileHandleManager(
         }
     }
 
-    fun getStoredFiles(): List<File> {
-        return userImportFolder.listFiles()?.toList()?.sortedBy { -it.lastModified() } ?: emptyList()
+    fun getStoredFiles(filter: ((File) -> Boolean)? = null): List<File> {
+        return userImportFolder.listFiles()?.toList()?.let { files ->
+            filter?.let { files.filter(it) } ?: files
+        }?.sortedBy { -it.lastModified() } ?: emptyList()
     }
 
     fun getFileInfo(name: String): Pair<Long, Long>? {

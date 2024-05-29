@@ -154,10 +154,20 @@ class FeaturesRoot : Routes.Route() {
         if (property.key.params.flags.contains(ConfigFlag.USER_IMPORT)) {
             registerDialogOnClickCallback()
             dialogComposable = {
+                var isEmpty by remember { mutableStateOf(false) }
                 val files = rememberAsyncMutableStateList(defaultValue = listOf()) {
-                    context.fileHandleManager.getStoredFiles()
+                    context.fileHandleManager.getStoredFiles {
+                        property.key.params.filenameFilter?.invoke(it.name) == true
+                    }.also {
+                        isEmpty = it.isEmpty()
+                        if (isEmpty) {
+                            propertyValue.setAny(null)
+                        }
+                    }
                 }
-                var selectedFile by remember(files.size) { mutableStateOf(files.firstOrNull { it.name == propertyValue.getNullable() }?.name) }
+                var selectedFile by remember(files.size) { mutableStateOf(files.firstOrNull { it.name == propertyValue.getNullable() }.also {
+                    if (files.isNotEmpty() && it == null) propertyValue.setAny(null)
+                }?.name) }
 
                 Card(
                     shape = MaterialTheme.shapes.large,
@@ -177,7 +187,7 @@ class FeaturesRoot : Routes.Route() {
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Bold,
                                 )
-                                if (files.isEmpty()) {
+                                if (isEmpty) {
                                     Text(
                                         text = context.translation["manager.dialogs.file_imports.no_files_settings_hint"],
                                         fontSize = 16.sp,

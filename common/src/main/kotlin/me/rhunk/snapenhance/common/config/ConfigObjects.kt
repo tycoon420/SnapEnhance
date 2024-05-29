@@ -43,6 +43,7 @@ class ConfigParams(
     var customTranslationPath: String? = null,
     var customOptionTranslationPath: String? = null,
     var inputCheck: ((String) -> Boolean)? = { true },
+    var filenameFilter: ((String) -> Boolean)? = null,
 ) {
     val notices get() = _notices?.let { FeatureNotice.entries.filter { flag -> it and flag.id != 0 } } ?: emptyList()
     val flags get() = _flags?.let { ConfigFlag.entries.filter { flag -> it and flag.id != 0 } } ?: emptyList()
