@@ -932,6 +932,10 @@
                             "disable_bitmoji": {
                                 "name": "Disable Bitmoji",
                                 "description": "Disables Friends Profile Bitmoji"
+                            },
+                            "custom_emoji_font": {
+                                "name": "Custom Emoji Font",
+                                "description": "Allows you to use a custom emoji font. Only works with .ttf fonts"
                             }
                         }
                     },
