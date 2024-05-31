@@ -1,10 +1,7 @@
 #pragma once
 
 #include <pthread.h>
-#include <sys/mman.h>
-#include <string.h>
 #include <dobby.h>
-#include "logger.h"
 
 
 static pthread_mutex_t hook_mutex = PTHREAD_MUTEX_INITIALIZER;
