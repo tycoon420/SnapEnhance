@@ -89,7 +89,6 @@ class BetterLocation : Feature("Better Location", loadParams = FeatureLoadParams
         editor.apply {
             // SCVSLocationUpdate
             edit(1) {
-                context.log.verbose("SCVSLocationUpdate ${this@apply}")
                 if (config.spoofLocation.get()) {
                     remove(1)
                     remove(2)
