@@ -35,6 +35,8 @@ class BridgeClient(
     private val context: ModContext
 ):  ServiceConnection {
     private var continuation: Continuation<Boolean>? = null
+    private val connectSemaphore = Semaphore(permits = 1)
+    private val reconnectSemaphore = Semaphore(permits = 1)
     private lateinit var service: BridgeInterface
 
     private val onConnectedCallbacks = mutableListOf<suspend () -> Unit>()
@@ -42,6 +44,15 @@ class BridgeClient(
     fun addOnConnectedCallback(callback: suspend () -> Unit) {
         synchronized(onConnectedCallbacks) {
             onConnectedCallbacks.add(callback)
+        }
+    }
+
+    private fun resumeContinuation(state: Boolean) {
+        runBlocking {
+            connectSemaphore.withPermit {
+                runCatching { continuation?.resume(state) }
+                continuation = null
+            }
         }
     }
 
@@ -92,8 +103,7 @@ class BridgeClient(
                         }
                     }.onFailure {
                         onFailure(it)
-                        continuation = null
-                        cancellableContinuation.resume(false)
+                        resumeContinuation(false)
                     }
                 }
             }
@@ -111,21 +121,16 @@ class BridgeClient(
                 }
             }
         }
-        continuation?.resume(true)
-        continuation = null
+        resumeContinuation(true)
     }
 
     override fun onNullBinding(name: ComponentName) {
-        Log.d("BridgeClient", "bridge null binding")
-        continuation?.resume(false)
-        continuation = null
+        resumeContinuation(false)
     }
 
     override fun onServiceDisconnected(name: ComponentName) {
         continuation = null
     }
-
-    private val reconnectSemaphore = Semaphore(permits = 1)
 
     private fun tryReconnect() {
         runBlocking {
