@@ -186,7 +186,7 @@ class RemoteSideContext(
         log.debug(message.toString())
     }
 
-    fun hasMessagingBridge() = bridgeService != null && bridgeService?.messagingBridge != null
+    fun hasMessagingBridge() = bridgeService != null && bridgeService?.messagingBridge != null && bridgeService?.messagingBridge?.asBinder()?.pingBinder() == true
 
     fun checkForRequirements(overrideRequirements: Int? = null): Boolean {
         var requirements = overrideRequirements ?: 0
