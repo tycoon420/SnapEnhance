@@ -160,6 +160,7 @@ class RemoteSideContext(
                         val cert = certFactory.generateCertificate(ByteArrayInputStream(it.toByteArray())) as X509Certificate
                         cert.issuerDN.toString()
                     } ?: throw Exception("Failed to get certificate info"),
+                gitHash = BuildConfig.GIT_HASH,
                 isDebugBuild = BuildConfig.DEBUG,
                 mappingVersion = mappings.getGeneratedBuildNumber(),
                 mappingsOutdated = mappings.isMappingsOutdated()
