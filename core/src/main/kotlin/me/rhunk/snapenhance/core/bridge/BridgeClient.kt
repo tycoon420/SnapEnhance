@@ -5,23 +5,15 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.Build
-import android.os.DeadObjectException
-import android.os.Handler
-import android.os.HandlerThread
-import android.os.IBinder
-import android.os.ParcelFileDescriptor
-import android.os.Process
+import android.os.*
 import android.util.Log
 import de.robv.android.xposed.XposedHelpers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withTimeoutOrNull
-import me.rhunk.snapenhance.bridge.AccountStorage
-import me.rhunk.snapenhance.bridge.BridgeInterface
-import me.rhunk.snapenhance.bridge.ConfigStateListener
-import me.rhunk.snapenhance.bridge.DownloadCallback
-import me.rhunk.snapenhance.bridge.SyncCallback
+import me.rhunk.snapenhance.bridge.*
 import me.rhunk.snapenhance.bridge.e2ee.E2eeInterface
 import me.rhunk.snapenhance.bridge.logger.LoggerInterface
 import me.rhunk.snapenhance.bridge.logger.TrackerInterface
@@ -58,7 +50,7 @@ class BridgeClient(
             return true
         }
 
-        return withTimeoutOrNull(5000L) {
+        return withTimeoutOrNull(10000L) {
             suspendCancellableCoroutine { cancellableContinuation ->
                 continuation = cancellableContinuation
                 with(context.androidContext) {
@@ -133,16 +125,21 @@ class BridgeClient(
         continuation = null
     }
 
+    private val reconnectSemaphore = Semaphore(permits = 1)
+
     private fun tryReconnect() {
         runBlocking {
-            Log.d("BridgeClient", "service is dead, restarting")
-            val canLoad = connect {
-                Log.e("BridgeClient", "connection failed", it)
-                context.softRestartApp()
-            }
-            if (canLoad != true) {
-                Log.e("BridgeClient", "failed to reconnect to service", Throwable())
-                context.softRestartApp()
+            reconnectSemaphore.withPermit {
+                if (service.asBinder().pingBinder()) return@runBlocking
+                Log.d("BridgeClient", "service is dead, restarting")
+                val canLoad = connect {
+                    Log.e("BridgeClient", "connection failed", it)
+                    context.softRestartApp()
+                }
+                if (canLoad != true) {
+                    Log.e("BridgeClient", "failed to reconnect to service, result=$canLoad")
+                    context.softRestartApp()
+                }
             }
         }
     }
