@@ -44,9 +44,14 @@
         },
         "sections": {
             "home": {
+                "version_title": "v{versionName} · by rhunk",
                 "update_title": "SnapEnhance Update",
                 "update_content": "Version {version} is available!",
-                "update_button": "Download"
+                "update_button": "Download",
+                "debug_build_summary_title": "You are running a debug build of SnapEnhance",
+                "debug_build_summary_content": "Version {versionName} ({versionCode})",
+                "debug_build_summary_date": "Build date: {date} ({days} days ago)",
+                "quick_actions_title": "Quick Actions"
             },
             "home_logs": {
                 "no_logs_hint": "No logs available",
@@ -283,6 +288,18 @@
         "change_language": {
             "name": "Change Language",
             "description": "Change the language of SnapEnhance"
+        },
+        "file_imports": {
+            "name": "File Imports",
+            "description": "Import files for use in Snapchat"
+        },
+        "friend_tracker": {
+            "name": "Friend Tracker",
+            "description": "Track your friends on Snapchat"
+        },
+        "logger_history": {
+            "name": "Logger History",
+            "description": "View the history of logged messages"
         }
     },
 
