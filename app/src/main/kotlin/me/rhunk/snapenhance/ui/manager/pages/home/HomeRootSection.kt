@@ -47,7 +47,7 @@ import me.rhunk.snapenhance.ui.manager.data.Updater
 import me.rhunk.snapenhance.ui.util.ActivityLauncherHelper
 import java.text.DateFormat
 
-class HomeRoot : Routes.Route() {
+class HomeRootSection : Routes.Route() {
     companion object {
         val cardMargin = 10.dp
     }
