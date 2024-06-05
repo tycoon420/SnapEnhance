@@ -1050,6 +1050,10 @@
                         "name": "Edit Messages",
                         "description": "Allows you to edit messages in conversations"
                     },
+                    "context_menu_fix": {
+                        "name": "Context Menu Fix",
+                        "description": "Attempt to repair the Friend Feed Menu as when the device is offline it cannot be displayed correctly"
+                    },
                     "app_lock": {
                         "name": "App Lock",
                         "description": "Prevents access to Snapchat without a passcode",
