@@ -73,6 +73,7 @@
             },
             "tasks": {
                 "no_tasks": "No tasks",
+                "failed_to_open_file": "Failed to open file",
                 "merge_files_toast": "Merging {count} files",
                 "remove_selected_tasks_title": "Are you sure you want to remove selected tasks?",
                 "remove_all_tasks_title": "Are you sure you want to remove all tasks?",
